@@ -1,4 +1,4 @@
-package com.javacodegeeks.patterns.mediatorpattern;
+package MediatorPattern;
 
 public class Heater implements Colleague {
 
