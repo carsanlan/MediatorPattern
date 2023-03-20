@@ -9,11 +9,18 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
+	id 'java'
+    //según https://github.com/junit-team/junit5-samples/blob/main/junit5-jupiter-starter-gradle/build.gradle
+    id 'eclipse'
+    //para poder publicar paquetes en github
+    id 'maven-publish'
 }
+version = '0.0'
 
 repositories {
     // Use JCenter for resolving dependencies.
     jcenter()
+	mavenCentral()
 }
 
 dependencies {
@@ -33,4 +40,32 @@ dependencies {
 tasks.named('test') {
     // Use junit platform for unit tests.
     useJUnitPlatform()
+}
+
+//Para publicar paquetes en github
+//group = 'MediatorPattern'
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/jorjimsan/MediatorPattern")
+            credentials {
+            //las propiedades gpr.user y gpr.key están configuradas en gradle.properties en el raiz del proyecto, y se añade a .gitignore para que no se suban
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+         //Del tutorial https://docs.gradle.org/current/userguide/publishing_maven.html#publishing_maven
+        
+            groupId = 'jorjimsan'
+            artifactId = 'MediatorPattern'
+            version = '0.0'
+
+            from components.java
+        }
+       
+    }
 }
